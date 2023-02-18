@@ -1,0 +1,41 @@
+# This block tells Uffizzi which service should receive HTTP traffic.
+x-uffizzi:
+  ingress:
+    service: app
+    port: 80
+
+# My application
+services:
+  app:
+    image: "${APP_IMAGE}"    # Output of build step stored as environment variable
+    environment:
+      PGUSER: "${PGUSER}"
+      PGPASSWORD: "${PGPASSWORD}"
+    deploy:
+      resources:
+        limits:
+          memory: 250M
+
+  db:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: "${PGUSER}"
+      POSTGRES_PASSWORD: "${PGPASSWORD}"
+services:
+  app:
+    build:
+      context: https://github.com/ahmadgholiyan/V2ray-for-Doprax
+      dockerfile: Dockerfile
+    environment:
+      PGUSER: "postgres"
+      PGPASSWORD: "postgres"
+    deploy:
+      resources:
+        limits:
+          memory: 250M
+
+  db:
+    image: postgres:9.6
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
